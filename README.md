@@ -2,7 +2,7 @@
 
 # An Admin Dashbaord For The Business "Shiv Furniture".
 
-# TECH STACK:
+## TECH STACK:
 1. Next.js
 2. Tailwind Css
 3. PostgreSQL
