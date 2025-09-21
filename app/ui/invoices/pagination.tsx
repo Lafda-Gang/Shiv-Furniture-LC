@@ -3,6 +3,7 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import Link from "next/link";
+import { ReactElement } from "react";
 import { generatePagination } from "@/app/lib/utils";
 import { usePathname, useSearchParams } from "next/navigation";
 
@@ -11,7 +12,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
 
-  const createPageURL = (pageNumber: number | string) => {
+  const createPageURL = (pageNumber: number | string): string => {
     const params = new URLSearchParams(searchParams);
     params.set("page", pageNumber.toString());
     return `${pathname}?${params.toString()}`;
@@ -38,7 +39,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
 
           return (
             <PaginationNumber
-              key={page + index}
+              key={`${page}-${index}`}
               href={createPageURL(page)}
               page={page}
               position={position}
@@ -67,7 +68,7 @@ function PaginationNumber({
   href: string;
   position?: "first" | "last" | "middle" | "single";
   isActive: boolean;
-}) {
+}): ReactElement {
   const className = clsx(
     "flex h-8 w-8 items-center justify-center text-sm rounded-md transition-colors duration-200",
     {
@@ -96,7 +97,7 @@ function PaginationArrow({
   href: string;
   direction: "left" | "right";
   isDisabled?: boolean;
-}) {
+}): ReactElement {
   const className = clsx(
     "flex h-8 w-8 items-center justify-center rounded-md transition-colors duration-200",
     {
