@@ -8,7 +8,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { ShoppingCartIcon } from "@heroicons/react/20/solid";
+
 import { TruckIcon } from "@heroicons/react/24/solid";
 
 // Map of links to display in the side navigation.
@@ -21,7 +21,6 @@ const links = [
     icon: DocumentDuplicateIcon,
   },
   { name: "Customers", href: "/dashboard/customers", icon: UserGroupIcon },
-  { name: "Cart", href: "/dashboard/cart", icon: ShoppingCartIcon },
   { name: "Vender", href: "/dashboard/vender", icon: TruckIcon },
 ];
 

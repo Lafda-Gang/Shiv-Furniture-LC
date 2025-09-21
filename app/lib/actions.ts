@@ -47,6 +47,7 @@ export async function createInvoice(prevState: State, formData: FormData) {
     };
   }
 
+  const { customerId, amount, status } = validatedFields.data;
   const amountInCents = amount * 100;
   const date = new Date().toISOString().split("T")[0];
 
@@ -85,7 +86,7 @@ export async function updateInvoice(id: string, formData: FormData) {
   } catch (error) {
     // log the error to the console for now
     console.error(error);
-    return { message: "Database Error: Failed to Update Invoice." };
+    throw new Error("Database Error: Failed to Update Invoice.");
   }
 
   revalidatePath("/dashboard/invoices");

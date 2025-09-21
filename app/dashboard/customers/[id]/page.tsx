@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, use } from "react";
 import {
   Trash2,
   Plus,
@@ -10,10 +10,13 @@ import {
   CheckCircle,
   X,
   FileText,
+  ArrowLeft,
 } from "lucide-react";
+import { UserIcon } from "@heroicons/react/24/outline";
 import { lusitana } from "@/app/ui/fonts";
+import Link from "next/link";
 
-type CartItem = {
+type CustomerCartItem = {
   id: number;
   product: string;
   description: string;
@@ -23,63 +26,125 @@ type CartItem = {
   taxPercent: number;
 };
 
-const initialCartItems: CartItem[] = [
-  {
-    id: 1,
-    product: "Executive Office Chair",
-    description: "Ergonomic leather chair with lumbar support",
-    category: "Office Furniture",
-    qty: 2,
-    unitPrice: 15500,
-    taxPercent: 18,
-  },
-  {
-    id: 2,
-    product: "Wooden Dining Table",
-    description: "6-seater solid wood dining table",
-    category: "Dining Furniture",
-    qty: 1,
-    unitPrice: 28500,
-    taxPercent: 18,
-  },
-  {
-    id: 3,
-    product: "Modern Sofa Set",
-    description: "3-piece L-shaped sofa with cushions",
-    category: "Living Room",
-    qty: 1,
-    unitPrice: 45000,
-    taxPercent: 18,
-  },
-  {
-    id: 4,
-    product: "Study Desk",
-    description: "Computer desk with drawers and cable management",
-    category: "Office Furniture",
-    qty: 3,
-    unitPrice: 12000,
-    taxPercent: 18,
-  },
-  {
-    id: 5,
-    product: "Bookshelf Unit",
-    description: "5-tier wooden bookshelf",
-    category: "Storage",
-    qty: 2,
-    unitPrice: 8500,
-    taxPercent: 12,
-  },
-];
+type CustomerDetails = {
+  id: number;
+  customerName: string;
+  companyName: string;
+  email: string;
+  phone: string;
+  customerNumber: string;
+  address: string;
+  gst: string;
+  totalPending: number;
+  totalOrders: number;
+};
 
-function calcUntaxedAmount(item: CartItem): number {
+// Mock data based on customer ID
+const getCustomerData = (id: string): CustomerDetails => {
+  const customers: { [key: string]: CustomerDetails } = {
+    "1": {
+      id: 1,
+      customerName: "Rajesh Kumar",
+      companyName: "Kumar Interiors Pvt Ltd",
+      email: "rajesh@kumarinteriors.com",
+      phone: "+91 98765 43210",
+      customerNumber: "CUST-001",
+      address: "123 Business Park, Corporate City, CC 560001",
+      gst: "29KUMAR1234F1Z5",
+      totalPending: 25000,
+      totalOrders: 15,
+    },
+    "2": {
+      id: 2,
+      customerName: "Priya Sharma",
+      companyName: "Sharma Hospitality Group",
+      email: "priya@sharmahotels.com",
+      phone: "+91 87654 32109",
+      customerNumber: "CUST-002",
+      address: "456 Hotel Plaza, Hospitality District, HD 560002",
+      gst: "29SHARMA5678G2H6",
+      totalPending: 156400,
+      totalOrders: 22,
+    },
+  };
+
+  return customers[id] || customers["1"];
+};
+
+const getCustomerCartItems = (id: string): CustomerCartItem[] => {
+  const cartItems: { [key: string]: CustomerCartItem[] } = {
+    "1": [
+      {
+        id: 1,
+        product: "Executive Office Chair",
+        description: "Ergonomic leather chair with lumbar support",
+        category: "Office Furniture",
+        qty: 2,
+        unitPrice: 15500,
+        taxPercent: 18,
+      },
+      {
+        id: 2,
+        product: "Wooden Dining Table",
+        description: "6-seater solid wood dining table",
+        category: "Dining Furniture",
+        qty: 1,
+        unitPrice: 28500,
+        taxPercent: 18,
+      },
+      {
+        id: 3,
+        product: "Study Desk",
+        description: "Computer desk with drawers and cable management",
+        category: "Office Furniture",
+        qty: 1,
+        unitPrice: 16000,
+        taxPercent: 18,
+      },
+    ],
+    "2": [
+      {
+        id: 1,
+        product: "Modern Sofa Set",
+        description: "3-piece L-shaped sofa with cushions",
+        category: "Living Room",
+        qty: 2,
+        unitPrice: 45000,
+        taxPercent: 18,
+      },
+      {
+        id: 2,
+        product: "Coffee Table",
+        description: "Elegant glass-top coffee table",
+        category: "Living Room",
+        qty: 3,
+        unitPrice: 12000,
+        taxPercent: 18,
+      },
+      {
+        id: 3,
+        product: "Bookshelf Unit",
+        description: "5-tier wooden bookshelf",
+        category: "Storage",
+        qty: 1,
+        unitPrice: 8500,
+        taxPercent: 12,
+      },
+    ],
+  };
+
+  return cartItems[id] || cartItems["1"];
+};
+
+function calcUntaxedAmount(item: CustomerCartItem): number {
   return item.qty * item.unitPrice;
 }
 
-function calcTaxAmount(item: CartItem): number {
+function calcTaxAmount(item: CustomerCartItem): number {
   return calcUntaxedAmount(item) * (item.taxPercent / 100);
 }
 
-function calcTotal(item: CartItem): number {
+function calcTotal(item: CustomerCartItem): number {
   return calcUntaxedAmount(item) + calcTaxAmount(item);
 }
 
@@ -87,8 +152,17 @@ function formatCurrency(amount: number): string {
   return `₹${amount.toLocaleString("en-IN")}`;
 }
 
-export default function CartPage() {
-  const [cartItems, setCartItems] = useState<CartItem[]>(initialCartItems);
+export default function CustomerCartPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  // Unwrap params Promise for Next.js 15 compatibility
+  const { id: customerId } = use(params);
+  const customerDetails = getCustomerData(customerId);
+  const [cartItems, setCartItems] = useState<CustomerCartItem[]>(
+    getCustomerCartItems(customerId),
+  );
 
   const updateQuantity = (id: number, newQty: number) => {
     if (newQty < 1) return;
@@ -114,56 +188,106 @@ export default function CartPage() {
 
   return (
     <div className="w-full">
-      <div className="flex w-full items-center justify-between">
-        <h1 className={`${lusitana.className} text-2xl`}>Shopping Cart</h1>
+      {/* Header with Back Button */}
+      <div className="flex w-full items-center justify-between mb-6">
+        <div className="flex items-center gap-4">
+          <Link
+            href="/dashboard/customers"
+            className="flex items-center gap-2 text-green-600 hover:text-green-800"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="text-sm font-medium">Back to Customers</span>
+          </Link>
+        </div>
       </div>
 
-      {/* PO Details and Actions */}
-      <div className="mt-4 flex flex-col gap-4 md:mt-8">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
-            <div>
-              <span className="font-medium">PO No:</span> PO-2024-001
-            </div>
-            <div>
-              <span className="font-medium">PO Date:</span>{" "}
-              {new Date().toLocaleDateString()}
-            </div>
-            <div>
-              <span className="font-medium">Vendor:</span> Shiv Furniture
-              Collection
-            </div>
-            <div>
-              <span className="font-medium">Reference:</span> REQ-25-0001
-            </div>
+      {/* Customer Details Card */}
+      <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+        <div className="flex items-start gap-4">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+            <UserIcon className="w-8 h-8 text-green-600" />
           </div>
-
-          <div className="flex flex-wrap gap-2">
-            <button className="flex items-center gap-2 px-3 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors">
-              <CheckCircle className="w-4 h-4" />
-              Confirm
-            </button>
-            <button className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
-              <Printer className="w-4 h-4" />
-              Print
-            </button>
-            <button className="flex items-center gap-2 px-3 py-2 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700 transition-colors">
-              <Send className="w-4 h-4" />
-              Send
-            </button>
-            <button className="flex items-center gap-2 px-3 py-2 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 transition-colors">
-              <FileText className="w-4 h-4" />
-              Draft
-            </button>
-            <button className="flex items-center gap-2 px-3 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors">
-              <X className="w-4 h-4" />
-              Cancel
-            </button>
-            <button className="px-3 py-2 bg-amber-600 text-white text-sm rounded-lg hover:bg-amber-700 transition-colors">
-              Create Bill
-            </button>
+          <div className="flex-1">
+            <h1 className={`${lusitana.className} text-2xl mb-2`}>
+              {customerDetails.customerName}
+            </h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div className="space-y-2">
+                <p>
+                  <span className="font-medium text-gray-600">
+                    Company Name:
+                  </span>{" "}
+                  {customerDetails.companyName}
+                </p>
+                <p>
+                  <span className="font-medium text-gray-600">
+                    Customer Number:
+                  </span>{" "}
+                  {customerDetails.customerNumber}
+                </p>
+                <p>
+                  <span className="font-medium text-gray-600">Email:</span>{" "}
+                  {customerDetails.email}
+                </p>
+                <p>
+                  <span className="font-medium text-gray-600">Phone:</span>{" "}
+                  {customerDetails.phone}
+                </p>
+              </div>
+              <div className="space-y-2">
+                <p>
+                  <span className="font-medium text-gray-600">GST Number:</span>{" "}
+                  {customerDetails.gst}
+                </p>
+                <p>
+                  <span className="font-medium text-gray-600">Address:</span>{" "}
+                  {customerDetails.address}
+                </p>
+                <p>
+                  <span className="font-medium text-gray-600">
+                    Pending Amount:
+                  </span>{" "}
+                  <span className="text-red-600 font-medium">
+                    {formatCurrency(customerDetails.totalPending)}
+                  </span>
+                </p>
+                <p>
+                  <span className="font-medium text-gray-600">
+                    Total Orders:
+                  </span>{" "}
+                  {customerDetails.totalOrders}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        <button className="flex items-center gap-2 px-3 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors">
+          <CheckCircle className="w-4 h-4" />
+          Confirm
+        </button>
+        <button className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
+          <Printer className="w-4 h-4" />
+          Print
+        </button>
+        <button className="flex items-center gap-2 px-3 py-2 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700 transition-colors">
+          <Send className="w-4 h-4" />
+          Send
+        </button>
+        <button className="flex items-center gap-2 px-3 py-2 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 transition-colors">
+          <FileText className="w-4 h-4" />
+          Draft
+        </button>
+        <button className="flex items-center gap-2 px-3 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors">
+          <X className="w-4 h-4" />
+          Cancel
+        </button>
+        <button className="px-3 py-2 bg-amber-600 text-white text-sm rounded-lg hover:bg-amber-700 transition-colors">
+          Create Bill
+        </button>
       </div>
 
       {/* Cart Items Table */}
@@ -194,7 +318,7 @@ export default function CartPage() {
                       <p className="text-sm text-gray-500">
                         {item.description}
                       </p>
-                      <p className="text-xs text-blue-600 font-medium">
+                      <p className="text-xs text-green-600 font-medium">
                         {item.category}
                       </p>
                     </div>
@@ -290,7 +414,7 @@ export default function CartPage() {
                         <div className="text-xs text-gray-500">
                           {item.description}
                         </div>
-                        <div className="text-xs text-blue-600 font-medium">
+                        <div className="text-xs text-green-600 font-medium">
                           {item.category}
                         </div>
                       </div>
@@ -320,7 +444,7 @@ export default function CartPage() {
                       {formatCurrency(calcUntaxedAmount(item))}
                     </td>
                     <td className="whitespace-nowrap px-3 py-3 text-center">
-                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                         {item.taxPercent}%
                       </span>
                     </td>
@@ -357,7 +481,7 @@ export default function CartPage() {
                   <td className="px-3 py-3 text-right">
                     {formatCurrency(grandTaxTotal)}
                   </td>
-                  <td className="px-3 py-3 text-right text-lg font-bold text-blue-600">
+                  <td className="px-3 py-3 text-right text-lg font-bold text-green-600">
                     {formatCurrency(grandTotal)}
                   </td>
                   <td className="px-3 py-3"></td>
@@ -440,7 +564,7 @@ export default function CartPage() {
               <span className="text-xl font-bold text-gray-900">
                 Grand Total:
               </span>
-              <span className="text-2xl font-bold text-blue-600">
+              <span className="text-2xl font-bold text-green-600">
                 {formatCurrency(grandTotal)}
               </span>
             </div>
