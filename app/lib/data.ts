@@ -51,6 +51,11 @@ export async function fetchLatestInvoices() {
 }
 
 export async function fetchCardData() {
+  console.log(
+    "🔄 Fetching card data for dashboard...",
+    new Date().toISOString(),
+  );
+
   try {
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
@@ -73,12 +78,22 @@ export async function fetchCardData() {
     const totalPaidInvoices = formatCurrency(data[2][0].paid ?? "0");
     const totalPendingInvoices = formatCurrency(data[2][0].pending ?? "0");
 
-    return {
+    const result = {
       numberOfCustomers,
       numberOfInvoices,
       totalPaidInvoices,
       totalPendingInvoices,
     };
+
+    console.log("✅ Dashboard data fetched successfully:", {
+      numberOfInvoices,
+      numberOfCustomers,
+      totalPaidInvoices,
+      totalPendingInvoices,
+      timestamp: new Date().toISOString(),
+    });
+
+    return result;
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch card data.");
