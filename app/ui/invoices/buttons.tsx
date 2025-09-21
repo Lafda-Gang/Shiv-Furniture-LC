@@ -8,10 +8,10 @@ export function CreateInvoice() {
   return (
     <Link
       href="/dashboard/invoices/create"
-      className="flex h-10 items-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+      className="btn-primary flex items-center gap-2 text-sm"
     >
-      <span className="hidden md:block">Create Invoice</span>{" "}
-      <PlusIcon className="h-5 md:ml-4" />
+      <span className="hidden md:block">Create Invoice</span>
+      <PlusIcon className="h-5 w-5" />
     </Link>
   );
 }
@@ -20,9 +20,9 @@ export function UpdateInvoice({ id }: { id: string }) {
   return (
     <Link
       href={`/dashboard/invoices/${id}/edit`}
-      className="rounded-md border p-2 hover:bg-gray-100"
+      className="rounded-lg p-2 hover:bg-pastel-primary/10 text-pastel-text/70 hover:text-pastel-primary transition-colors duration-200"
     >
-      <PencilIcon className="w-5" />
+      <PencilIcon className="w-5 h-5" />
     </Link>
   );
 }
@@ -61,12 +61,12 @@ export function DeleteInvoice({ id }: { id: string }) {
       <button
         onClick={handleDelete}
         disabled={isPending || success}
-        className={`rounded-md border p-2 transition-all duration-200 group ${
+        className={`rounded-lg p-2 transition-all duration-200 group ${
           success
-            ? "bg-green-50 border-green-300 cursor-default"
+            ? "bg-green-50 text-green-600"
             : isPending
-              ? "opacity-50 cursor-not-allowed bg-gray-100 animate-pulse"
-              : "hover:bg-red-50 hover:border-red-300 hover:scale-105"
+              ? "opacity-50 cursor-not-allowed animate-pulse"
+              : "hover:bg-red-50 text-pastel-text/70 hover:text-red-500"
         }`}
         title={
           success
@@ -87,7 +87,7 @@ export function DeleteInvoice({ id }: { id: string }) {
           <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
         ) : success ? (
           <svg
-            className="w-5 h-5 text-green-600"
+            className="w-5 h-5"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -100,7 +100,7 @@ export function DeleteInvoice({ id }: { id: string }) {
             />
           </svg>
         ) : (
-          <TrashIcon className="w-5 text-gray-600 group-hover:text-red-600" />
+          <TrashIcon className="w-5 h-5" />
         )}
       </button>
 

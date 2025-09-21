@@ -123,25 +123,27 @@ function CustomerStatus({ status }: { status: string }) {
 
   switch (status) {
     case "paid":
-      statusClasses = "bg-green-100 text-green-800";
+      statusClasses =
+        "bg-pastel-primary/10 text-pastel-primary border border-pastel-primary/20";
       statusText = "Paid";
       break;
     case "pending":
-      statusClasses = "bg-yellow-100 text-yellow-800";
+      statusClasses =
+        "bg-pastel-secondary/10 text-pastel-secondary border border-pastel-secondary/20";
       statusText = "Pending";
       break;
     case "overdue":
-      statusClasses = "bg-red-100 text-red-800";
+      statusClasses = "bg-red-50 text-red-500 border border-red-200";
       statusText = "Overdue";
       break;
     default:
-      statusClasses = "bg-gray-100 text-gray-800";
+      statusClasses = "bg-gray-100 text-pastel-text/70 border border-gray-200";
       statusText = "Unknown";
   }
 
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusClasses}`}
+      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200 ${statusClasses}`}
     >
       {statusText}
     </span>
@@ -159,7 +161,7 @@ export default function CustomersPage() {
         <div></div>
         <Link
           href="/dashboard/customers/create"
-          className="flex h-10 items-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          className="btn-primary flex items-center gap-2"
         >
           <span className="hidden md:block">Create Customer</span>{" "}
           <PlusIcon className="h-5 md:ml-4" />
@@ -169,19 +171,19 @@ export default function CustomersPage() {
       {/* Customer Table */}
       <div className="mt-6 flow-root">
         <div className="inline-block min-w-full align-middle">
-          <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
+          <div className="rounded-lg clay-card p-2 md:pt-0">
             {/* Mobile View */}
             <div className="md:hidden">
               {customerData.map((customer) => (
                 <div
                   key={customer.id}
-                  className="mb-2 w-full rounded-md bg-white p-4"
+                  className="mb-2 w-full rounded-xl glass-card p-4"
                 >
                   <div className="flex items-center justify-between border-b pb-4">
                     <div>
                       <div className="mb-2 flex items-center">
-                        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                          <UserIcon className="w-4 h-4 text-green-600" />
+                        <div className="w-8 h-8 bg-pastel-primary/10 rounded-full flex items-center justify-center mr-3">
+                          <UserIcon className="w-4 h-4 text-pastel-primary" />
                         </div>
                         <div>
                           <Link
@@ -190,7 +192,7 @@ export default function CustomersPage() {
                           >
                             {customer.customerName}
                           </Link>
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-pastel-text/70">
                             {customer.companyName}
                           </p>
                         </div>
@@ -201,33 +203,35 @@ export default function CustomersPage() {
                   </div>
                   <div className="pt-4 space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Order Number:</span>
+                      <span className="text-pastel-text/70">Order Number:</span>
                       <span className="font-medium">
                         {customer.orderNumber}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Order Date:</span>
+                      <span className="text-pastel-text/70">Order Date:</span>
                       <span>{formatDate(customer.orderDate)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Delivery Date:</span>
+                      <span className="text-pastel-text/70">
+                        Delivery Date:
+                      </span>
                       <span>{formatDate(customer.deliveryDate)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Amount:</span>
+                      <span className="text-pastel-text/70">Amount:</span>
                       <span className="font-medium">
                         {formatCurrency(customer.amount)}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Balance:</span>
+                      <span className="text-pastel-text/70">Balance:</span>
                       <span className="font-medium text-red-600">
                         {formatCurrency(customer.balance)}
                       </span>
                     </div>
                     <div className="mt-3 pt-3 border-t">
-                      <p className="text-sm font-medium text-gray-700 mb-2">
+                      <p className="text-sm font-medium text-pastel-text mb-2">
                         Products ({customer.products.length} items):
                       </p>
                       <div className="space-y-1">
@@ -236,7 +240,7 @@ export default function CustomersPage() {
                             key={product.id}
                             className="flex justify-between text-xs"
                           >
-                            <span className="text-gray-600 truncate">
+                            <span className="text-pastel-text/70 truncate">
                               {product.name} (×{product.qty})
                             </span>
                             <span className="font-medium ml-2">
@@ -245,7 +249,7 @@ export default function CustomersPage() {
                           </div>
                         ))}
                         {customer.products.length > 2 && (
-                          <p className="text-xs text-gray-500 italic">
+                          <p className="text-xs text-pastel-text/50 italic">
                             +{customer.products.length - 2} more items...
                           </p>
                         )}
@@ -268,10 +272,13 @@ export default function CustomersPage() {
             </div>
 
             {/* Desktop Table */}
-            <table className="hidden min-w-full text-gray-900 md:table">
+            <table className="hidden min-w-full text-pastel-text md:table">
               <thead className="rounded-lg text-left text-sm font-normal">
                 <tr>
-                  <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
+                  <th
+                    scope="col"
+                    className="px-4 py-5 font-semibold text-pastel-primary sm:pl-6"
+                  >
                     Customer Name
                   </th>
                   <th scope="col" className="px-3 py-5 font-medium">
@@ -300,11 +307,11 @@ export default function CustomersPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white">
+              <tbody className="glass-card">
                 {customerData.map((customer) => (
                   <tr
                     key={customer.id}
-                    className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                    className="w-full border-b border-pastel-primary/10 py-3 text-sm last-of-type:border-none hover:bg-pastel-primary/5 transition-colors duration-200 [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                   >
                     <td className="whitespace-nowrap py-3 pl-6 pr-3">
                       <div className="flex items-center gap-3">
@@ -314,7 +321,7 @@ export default function CustomersPage() {
                         <div>
                           <Link
                             href={`/dashboard/customers/${customer.id}`}
-                            className="font-medium text-green-600 hover:text-green-800 hover:underline"
+                            className="font-medium text-pastel-primary hover:text-pastel-primary/80 hover:underline"
                           >
                             {customer.customerName}
                           </Link>
@@ -369,13 +376,13 @@ export default function CustomersPage() {
                     </td>
                     <td className="whitespace-nowrap py-3 pl-6 pr-3">
                       <div className="flex justify-end gap-2">
-                        <button className="w-8 h-8 rounded-full bg-green-50 text-green-600 hover:bg-green-100 transition-colors flex items-center justify-center">
+                        <button className="w-8 h-8 rounded-full bg-pastel-primary/10 text-pastel-primary hover:bg-pastel-primary/20 transition-colors flex items-center justify-center">
                           <EyeIcon className="w-4 h-4" />
                         </button>
-                        <button className="w-8 h-8 rounded-full bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center">
+                        <button className="w-8 h-8 rounded-full bg-pastel-secondary/10 text-pastel-secondary hover:bg-pastel-secondary/20 transition-colors flex items-center justify-center">
                           <PencilIcon className="w-4 h-4" />
                         </button>
-                        <button className="w-8 h-8 rounded-full bg-red-50 text-red-600 hover:bg-red-100 transition-colors flex items-center justify-center">
+                        <button className="w-8 h-8 rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition-colors flex items-center justify-center">
                           <TrashIcon className="w-4 h-4" />
                         </button>
                       </div>

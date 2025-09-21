@@ -1,33 +1,116 @@
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import styles from "@/app/ui/home.module.css";
-import { lusitana } from "@/app/ui/fonts";
 import Image from "next/image";
+import { lusitana } from "@/app/ui/fonts";
 
-export default function Page() {
+export default function LandingPage() {
   return (
-    <main className="flex min-h-screen flex-col p-6">
-      <div className={styles.shape} />
-      <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52"></div>
-      <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
-        <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
-          <div className="relative w-0 h-0 border-l-[15px] border-r-[15px] border-b-[26px] border-r-transparent border-b-purple-500" />
-          <p
-            className={
-              "${lusitana.classname} text-xl text-grey-800 md:text-3xl md:leading-normal"
-            }
-          >
-            <strong>Welcome to Shiv Furniture.</strong>
-          </p>
-          <Link
-            href="/login"
-            className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
-          >
-            <span>Log in</span> <ArrowRightIcon className="w-5 md:w-6" />
+    <main className="min-h-screen bg-pastel-background overflow-x-hidden">
+      {/* Navigation */}
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <nav className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <Image
+              src="/logo.jpeg"
+              alt="Shiv Furniture Logo"
+              width={50}
+              height={50}
+              className="object-contain rounded-lg"
+            />
+            <span
+              className={`${lusitana.className} text-2xl font-bold text-pastel-text`}
+            >
+              Shiv Furniture
+            </span>
+          </div>
+          <Link href="/login" className="btn-primary">
+            Admin Login
           </Link>
-        </div>
-        <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12"></div>
+        </nav>
       </div>
+
+      {/* Main Content */}
+      <section className="bg-white py-16">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h1
+              className={`${lusitana.className} text-4xl md:text-5xl font-bold text-pastel-text mb-6`}
+            >
+              Elegant Furniture for Your Dream Home
+            </h1>
+            <p className="text-lg text-gray-600 mb-8">
+              Discover our exquisite collection of handcrafted furniture,
+              designed to bring timeless beauty and comfort to your living
+              spaces.
+            </p>
+            <div className="flex gap-4 justify-center">
+              <Link href="/login" className="btn-primary">
+                Get Started
+              </Link>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mt-16">
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                className="clay-card hover:translate-y-[-4px] text-center"
+              >
+                <div className="text-pastel-primary text-4xl mb-4">
+                  {feature.icon}
+                </div>
+                <h3 className="text-xl font-semibold mb-2 text-pastel-text">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-pastel-text text-white py-8">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex items-center gap-2 mb-4 md:mb-0">
+              <Image
+                src="/logo.jpeg"
+                alt="Shiv Furniture Logo"
+                width={40}
+                height={40}
+                className="object-contain rounded-lg"
+              />
+              <span className={`${lusitana.className} text-xl font-bold`}>
+                Shiv Furniture
+              </span>
+            </div>
+            <div className="text-center md:text-right">
+              <p>&copy; 2024 Shiv Furniture. All rights reserved.</p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }
+
+const features = [
+  {
+    icon: "🪑",
+    title: "Custom Furniture",
+    description:
+      "Bespoke furniture pieces crafted to your exact specifications, bringing your vision to life.",
+  },
+  {
+    icon: "🏠",
+    title: "Interior Design",
+    description:
+      "Expert design consultation to help you create harmonious and functional living spaces.",
+  },
+  {
+    icon: "✨",
+    title: "Quality Craftsmanship",
+    description:
+      "Each piece is masterfully crafted using premium materials and traditional techniques.",
+  },
+];

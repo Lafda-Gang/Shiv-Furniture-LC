@@ -16,3 +16,83 @@ input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
+@layer components {
+    .glass-card {
+        @apply bg-pastel-background/80 backdrop-blur-lg border border-pastel-primary/20 rounded-xl
+           shadow-lg transition-all duration-300 hover:shadow-xl;
+    }
+
+    .clay-card {
+        @apply bg-pastel-background/90 rounded-xl p-6
+           shadow-[8px_8px_16px_rgba(85,107,47,0.1),-8px_-8px_16px_rgba(255,255,255,0.9)]
+           transition-all duration-300 hover:bg-white/90;
+    }
+
+    .spinner {
+        @apply w-8 h-8 rounded-full border-4 border-pastel-primary/30
+           border-t-pastel-primary animate-spin;
+    }
+
+    .btn-primary {
+        @apply bg-pastel-primary text-pastel-background px-6 py-2 rounded-lg
+           shadow-md hover:shadow-lg transition-all duration-300
+           hover:translate-y-[-1px] active:translate-y-[1px] hover:bg-opacity-90
+           disabled:opacity-50 disabled:cursor-not-allowed font-semibold;
+    }
+
+    .btn-secondary {
+        @apply bg-pastel-secondary text-pastel-background px-6 py-2 rounded-lg
+           shadow-md hover:shadow-lg transition-all duration-300
+           hover:translate-y-[-1px] active:translate-y-[1px] hover:bg-opacity-90
+           disabled:opacity-50 disabled:cursor-not-allowed font-semibold;
+    }
+
+    .input-field {
+        @apply w-full px-4 py-2 rounded-lg border border-pastel-primary/30
+           bg-white/70 backdrop-blur-sm text-pastel-text
+           focus:outline-none focus:ring-2 focus:ring-pastel-primary/50
+           placeholder:text-pastel-text/50 shadow-inner;
+    }
+
+    .nav-link {
+        @apply flex items-center gap-2 px-4 py-2 rounded-lg text-pastel-text
+           hover:bg-pastel-primary/10 transition-colors duration-200
+           hover:text-pastel-primary;
+    }
+
+    .nav-link-active {
+        @apply bg-pastel-primary/20 text-pastel-primary font-medium;
+    }
+}
+
+/* Dark mode overrides */
+.dark .glass-card {
+    @apply bg-black/10 border-white/10;
+}
+
+.dark .clay-card {
+    @apply bg-gray-800 shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(30,30,30,0.8)];
+}
+
+.dark .input-field {
+    @apply bg-black/20 border-white/10 text-white placeholder:text-gray-500;
+}
+
+.dark .nav-link-active {
+    @apply bg-pastel-primary/30;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-pastel-background;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-pastel-primary/50 rounded-full hover:bg-pastel-primary/70;
+}
