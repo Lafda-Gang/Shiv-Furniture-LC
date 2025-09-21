@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, use } from "react";
+import { useRouter } from "next/navigation";
 import {
   Trash2,
   Plus,
@@ -163,6 +164,41 @@ export default function CustomerCartPage({
   const [cartItems, setCartItems] = useState<CustomerCartItem[]>(
     getCustomerCartItems(customerId),
   );
+  const router = useRouter();
+
+  // Customer-specific URLs for Create Bill button
+  const CREATE_BILL_URLS: { [key: string]: string } = {
+    "1": "https://rzp.io/rzp/pCEALeNu", // Rajesh Kumar
+    "2": "https://rzp.io/rzp/5RyMYvp", // Priya Sharma
+  };
+
+  // Customer-specific PDF files for Print button
+  const CUSTOMER_PDF_URLS: { [key: string]: string } = {
+    "1": "/ramesh.pdf", // Rajesh Kumar
+    "2": "/priya.pdf", // Priya Sharma
+  };
+
+  const handleCreateBill = () => {
+    const billUrl = CREATE_BILL_URLS[customerId];
+    if (billUrl) {
+      // Open the Razorpay link in a new tab
+      window.open(billUrl, "_blank");
+    } else {
+      // Fallback URL if customer ID not found
+      router.push("/dashboard/bills/create");
+    }
+  };
+
+  const handlePrint = () => {
+    const pdfUrl = CUSTOMER_PDF_URLS[customerId];
+    if (pdfUrl) {
+      // Open the PDF in a new tab
+      window.open(pdfUrl, "_blank");
+    } else {
+      // Fallback - try to print the current page
+      window.print();
+    }
+  };
 
   const updateQuantity = (id: number, newQty: number) => {
     if (newQty < 1) return;
@@ -269,7 +305,10 @@ export default function CustomerCartPage({
           <CheckCircle className="w-4 h-4" />
           Confirm
         </button>
-        <button className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
+        <button
+          onClick={handlePrint}
+          className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
+        >
           <Printer className="w-4 h-4" />
           Print
         </button>
@@ -285,7 +324,10 @@ export default function CustomerCartPage({
           <X className="w-4 h-4" />
           Cancel
         </button>
-        <button className="px-3 py-2 bg-amber-600 text-white text-sm rounded-lg hover:bg-amber-700 transition-colors">
+        <button
+          onClick={handleCreateBill}
+          className="px-3 py-2 bg-amber-600 text-white text-sm rounded-lg hover:bg-amber-700 transition-colors"
+        >
           Create Bill
         </button>
       </div>

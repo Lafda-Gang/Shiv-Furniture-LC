@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, use } from "react";
+import { useRouter } from "next/navigation";
 import {
   Trash2,
   Plus,
@@ -163,6 +164,41 @@ export default function VendorCartPage({
   const [cartItems, setCartItems] = useState<VendorCartItem[]>(
     getVendorCartItems(vendorId),
   );
+  const router = useRouter();
+
+  // Vendor-specific URLs for Process Payment button
+  const PAYMENT_URLS: { [key: string]: string } = {
+    "1": "https://rzp.io/rzp/hwNeeNBm", // Premium Wood Suppliers
+    "2": "https://rzp.io/rzp/Hqcpjup", // Elite Hardware Solutions
+  };
+
+  // Vendor-specific PDF files for Print button
+  const VENDOR_PDF_URLS: { [key: string]: string } = {
+    "1": "/Premium Wood Suppliers.pdf", // Premium Wood Suppliers
+    "2": "/Elite Hardware Solutions.pdf", // Elite Hardware Solutions
+  };
+
+  const handleProcessPayment = () => {
+    const paymentUrl = PAYMENT_URLS[vendorId];
+    if (paymentUrl) {
+      // Open the Razorpay link in a new tab
+      window.open(paymentUrl, "_blank");
+    } else {
+      // Fallback URL if vendor ID not found
+      router.push("/dashboard/payments/create");
+    }
+  };
+
+  const handlePrint = () => {
+    const pdfUrl = VENDOR_PDF_URLS[vendorId];
+    if (pdfUrl) {
+      // Open the PDF in a new tab
+      window.open(pdfUrl, "_blank");
+    } else {
+      // Fallback - try to print the current page
+      window.print();
+    }
+  };
 
   const updateQuantity = (id: number, newQty: number) => {
     if (newQty < 1) return;
@@ -268,7 +304,10 @@ export default function VendorCartPage({
           <CheckCircle className="w-4 h-4" />
           Approve Order
         </button>
-        <button className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
+        <button
+          onClick={handlePrint}
+          className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
+        >
           <Printer className="w-4 h-4" />
           Print
         </button>
@@ -284,7 +323,10 @@ export default function VendorCartPage({
           <X className="w-4 h-4" />
           Reject
         </button>
-        <button className="px-3 py-2 bg-orange-600 text-white text-sm rounded-lg hover:bg-orange-700 transition-colors">
+        <button
+          onClick={handleProcessPayment}
+          className="px-3 py-2 bg-orange-600 text-white text-sm rounded-lg hover:bg-orange-700 transition-colors"
+        >
           Process Payment
         </button>
       </div>
